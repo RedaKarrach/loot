@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>loot</title>
+<meta name="description" content="What would an infostealer take from your laptop? Nine questions, nine commands, real output. Press enter.">
+<meta property="og:title" content="loot">
+<meta property="og:description" content="What would an infostealer take from your laptop? One command, read-only, a grade you can raise.">
+<meta property="og:image" content="https://redakarrach.github.io/loot/assets/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:url" content="https://redakarrach.github.io/loot/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://redakarrach.github.io/loot/assets/social-preview.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0b0d'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ff4d6d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0b0b0d; --acc: #ff4d6d; --acc-dim: #8f2a3c; --text: #e6e1d8; --dim: #7c7873; --green: #4fd1a1; --red: #ff6b6b; --yellow: #f5c451; --cyan: #7fd7ff; --sel: #1a1013; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0px, rgba(0,0,0,.18) 1px, transparent 1px, transparent 3px); opacity: .45; }
+  body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 49; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%); }
+  a { color: var(--cyan); }
+  pre, .pre { font-family: inherit; margin: 0; white-space: pre-wrap; word-break: break-word; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; min-width: 0; }
+
+  .status { position: fixed; top: 0; left: 0; right: 0; z-index: 60; background: var(--acc); color: #1d0309; font-weight: 600; font-size: 12.5px; padding: 4px 0; }
+  .status .wrap { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .status .keys { margin-left: auto; font-weight: 400; }
+  .status .keys b { font-weight: 600; }
+  @media (max-width: 640px) { .status .keys { display: none; } }
+
+  .banner { padding: 56px 0 10px; }
+  .banner pre { color: var(--acc); font-size: clamp(9px, 2.6vw, 16px); line-height: 1.15; text-shadow: 0 0 8px rgba(255,77,109,.35); white-space: pre; overflow: hidden; }
+  .tag { color: var(--dim); margin: 10px 0 0; }
+  .tag b { color: var(--text); font-weight: 400; }
+  .intro { margin: 22px 0 10px; }
+  .intro .k { color: var(--acc); }
+
+  .step { margin-top: 28px; padding-top: 18px; border-top: 1px dashed #2a1f22; }
+  .q { color: var(--acc); font-weight: 600; font-size: 16px; margin: 0 0 10px; }
+  .q small { color: var(--dim); font-weight: 400; font-size: 12px; display: block; margin-bottom: 4px; letter-spacing: .08em; }
+  .prompt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; cursor: pointer; padding: 6px 8px; margin-left: -8px; border-radius: 3px; }
+  .prompt:hover { background: var(--sel); }
+  .ps1 { color: var(--green); flex: 0 0 auto; }
+  .cmd { color: var(--text); min-width: 0; word-break: break-all; }
+  .cmd.ghost { color: var(--dim); }
+  .hint { color: var(--acc-dim); font-size: 12px; }
+  .cur::after { content: "█"; color: var(--acc); animation: blink 1s steps(1) infinite; margin-left: 1px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .out { margin: 6px 0 0 0; color: var(--text); overflow-x: auto; }
+  .out.long { max-height: 480px; overflow-y: auto; border-bottom: 1px dashed #2a1f22; }
+  .out .c { color: var(--dim); }
+  .out .g { color: var(--green); } .out .r { color: var(--red); } .out .y { color: var(--yellow); } .out .b { color: var(--cyan); }
+  .out .box { white-space: pre; }
+  .menu { margin: 10px 0 0; }
+  .menu button { font-family: inherit; font-size: 13.5px; background: transparent; color: var(--cyan); border: 1px solid #214452; border-radius: 3px; padding: 4px 10px; margin: 4px 6px 0 0; cursor: pointer; max-width: 100%; white-space: normal; word-break: break-word; text-align: left; }
+  .menu button:hover, .menu button.on { background: #0c1a1f; border-color: var(--cyan); }
+  .menu button b { color: var(--acc); font-weight: 600; }
+  .menu .lbl { color: var(--dim); margin-right: 6px; }
+  .next { display: block; margin: 22px 0 0; padding: 12px 10px; text-align: center; color: var(--acc); border: 1px solid var(--acc-dim); border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: 600; letter-spacing: .04em; }
+  .next:hover { background: var(--sel); }
+  .next .arrow { display: block; font-size: 26px; line-height: 1; margin-bottom: 4px; animation: bob 1.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(5px); } }
+  .hidden { display: none; }
+  .fin { padding: 40px 0 70px; color: var(--dim); }
+  @media (prefers-reduced-motion: reduce) { .cur::after, .next .arrow { animation: none; } html { scroll-behavior: auto; } body::before { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="status"><div class="wrap"><span>LOOT</span><span id="prog">[----------] Q0/9</span><span class="keys"><b>enter</b> run &nbsp; <b>↓</b> next &nbsp; <b>1-9</b> choose &nbsp; <b>r</b> restart</span></div></div>
+
+<div class="wrap">
+  <div class="banner" id="top">
+<pre> _     ___   ___ _____
+| |   / _ \ / _ \_   _|
+| |  | | | | | | || |
+| |__| |_| | |_| || |
+|_____\___/ \___/ |_|</pre>
+    <p class="tag"><b>what would an infostealer take from your laptop?</b> · MIT · <a href="https://github.com/RedaKarrach/loot">github.com/RedaKarrach/loot</a></p>
+    <p class="intro"><span class="k">What this is for.</span> An infostealer is malware with a shopping list. It does not hack anything. It copies files from a known set of places on your computer, cloud keys, SSH keys, Git logins, the browser's saved passwords, and sends them away. Thirty seconds, and the attacker has everything you can log into. Most of the big breaches of the last few years started exactly like that, on one employee's laptop. loot walks the same shopping list, shows you what a stealer would get and what each item unlocks, grades the result, and gives you a one-line fix per item. Then you fix things and run it again.<br><br>It only reads. Nothing leaves your machine. Secrets are never printed in full.<br><br>Nine questions, one command each. The output is what loot really prints, run against a planted demo folder where every value is fake.<br><br><span class="k">Press enter, or tap the command line, to run the first one.</span></p>
+  </div>
+
+  <div id="steps"></div>
+
+  <div class="fin hidden" id="fin">
+    <div class="step">
+      <p class="q"><small>END OF TRANSMISSION</small>Run it on your own laptop.</p>
+      <pre class="out"><span class="ps1">$</span> pipx install git+https://github.com/RedaKarrach/loot
+<span class="ps1">$</span> loot
+
+<span class="c"># nervous? plant a fake home first and scan that</span>
+<span class="ps1">$</span> python demo/plant.py /tmp/demo-home
+<span class="ps1">$</span> loot scan --home /tmp/demo-home --system linux
+
+<span class="c"># for scripts, dotfiles repos, laptop onboarding</span>
+<span class="ps1">$</span> loot scan --json
+<span class="ps1">$</span> loot scan --fail-on high        <span class="c"># exit 1 if anything high or critical is found</span>
+
+<span class="c"># how the grade works</span>
+critical 25 · high 10 · medium 5 · low 1 · info 0, per finding. each category costs at most 40.
+100 minus the damage. 90+ A, 75+ B, 60+ C, 40+ D, else F. harsh on purpose.
+
+<span class="c"># what it does not do</span>
+- it never opens browser databases or wallet files. it only notices they exist.
+- it looks where stealers look, not everywhere. for a whole-repo scan use gitleaks or trufflehog.
+- it fixes nothing. every finding has a one-line fix; running them is your call.
+
+<span class="c"># stack</span>
+Python 3.11+ · click · rich · no network · tests on Linux, macOS and Windows</pre>
+      <p style="margin-top:18px"><a href="https://github.com/RedaKarrach/loot">source</a> · <a href="https://github.com/RedaKarrach/loot#readme">README</a> · <a href="#top" id="restart">[r] restart</a> · built by <a href="https://github.com/RedaKarrach">Mohamed Reda Karrach</a>. every key, token and name on this page is fake, from the demo folder loot ships with.</p>
+    </div>
+  </div>
+</div>
+
+<!-- real loot output, pasted verbatim by the build step -->
+<script type="text/plain" id="o-paths"><!--OUT:paths--></script>
+<script type="text/plain" id="o-full"><!--OUT:full--></script>
+<script type="text/plain" id="o-aws"><!--OUT:only-aws--></script>
+<script type="text/plain" id="o-aws-fixed"><!--OUT:fixed-aws--></script>
+<script type="text/plain" id="o-ssh"><!--OUT:only-ssh--></script>
+<script type="text/plain" id="o-ssh-fixed"><!--OUT:fixed-ssh--></script>
+<script type="text/plain" id="o-env"><!--OUT:only-env-files--></script>
+<script type="text/plain" id="o-history"><!--OUT:only-history--></script>
+<script type="text/plain" id="o-git"><!--OUT:only-git--></script>
+<script type="text/plain" id="o-browsers"><!--OUT:only-browsers--></script>
+<script type="text/plain" id="o-fixed"><!--OUT:fixed-all--></script>
+
+<script>
+(function () {
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function colorize(id) {
+    var t = esc(document.getElementById(id).textContent.replace(/^\n+/, '').replace(/\s+$/, ''));
+    t = t.replace(/Grade ([AB])/g, 'Grade <span class="g">$1</span>').replace(/Grade ([CD])/g, 'Grade <span class="y">$1</span>').replace(/Grade (F)/g, 'Grade <span class="r">$1</span>');
+    t = t.replace(/^(\s*(?:\d+\s+)?)(critical|high)(?=\s{2,})/gm, '$1<span class="r">$2</span>')
+         .replace(/^(\s*(?:\d+\s+)?)(medium)(?=\s{2,})/gm, '$1<span class="y">$2</span>')
+         .replace(/^(\s*(?:\d+\s+)?)(low)(?=\s{2,})/gm, '$1<span class="b">$2</span>')
+         .replace(/^(\s*(?:\d+\s+)?)(info)(?=\s{2,})/gm, '$1<span class="g">$2</span>');
+    t = t.replace(/^(\s+\d+ (?:critical|high))$/gm, '<span class="r">$1</span>').replace(/^(\s+\d+ medium)$/gm, '<span class="y">$1</span>');
+    t = t.replace(/(Nothing left this machine\. Values are masked\.)/g, '<span class="c">$1</span>').replace(/^(Next: .*)$/gm, '<span class="c">$1</span>').replace(/^(\d+ positive note.*)$/gm, '<span class="c">$1</span>');
+    return '<span class="box">' + t + '</span>';
+  }
+  var N = '<span class="c">';
+
+  var STEPS = [
+    {
+      q: 'If malware ran on your laptop right now, where would it look?',
+      cmd: 'loot paths',
+      out: function () { return colorize('o-paths') + '\n' + N + '// the list is not clever and it does not need to be. every developer machine has most of these.</span>'; },
+      menu: [
+        { k: '1', label: 'how an infostealer actually works', run: function () { return N + '# 1. you run something you should not have: a cracked tool, a fake "update", an npm package with a postinstall.\n# 2. it reads the files above. no exploits, no privilege needed, you can read them, so can it.\n# 3. it zips them and posts them to a server. thirty seconds, start to finish.\n# 4. the archive is sold as a "log". whoever buys it logs in as you. the Snowflake customer breaches of 2024\n#    started with credentials from logs like that, sitting around for years.</span>'; } }
+      ]
+    },
+    {
+      q: 'So what would it take from this laptop?',
+      cmd: 'loot',
+      long: true,
+      out: function () { return colorize('o-full'); },
+      menu: [
+        { k: '1', label: 'why an F? how the grade works', run: function () { return N + '# every finding costs points: critical 25, high 10, medium 5, low 1. a category can cost at most 40, so forty\n# .env secrets cannot hide the one long-lived cloud key that matters more. 100 minus the damage is your score.\n# 90+ A, 75+ B, 60+ C, 40+ D, under that F. this laptop is far below zero. most developer laptops are.</span>'; } },
+        { k: '2', label: 'what does "masked" mean?', run: function () { return N + '# AKIAIOSFODNN7EXAMPLE is shown as AKIA…MPLE. loot masks a value before it even stores the finding, so the\n# full secret is never in its output, its JSON, or your scrollback. the tests plant every kind of secret and\n# assert that none of them appears anywhere in what loot prints.</span>'; } }
+      ]
+    },
+    {
+      q: 'The worst one first: a cloud key that never expires.',
+      cmd: 'loot scan --only aws',
+      out: function () { return colorize('o-aws') + '\n' + N + '// a long-lived AWS key works from anywhere, forever, until a human deactivates it. a stealer copies two\n// lines of text and has your cloud account. this is how the $2,000 crypto-mining bills happen.</span>'; },
+      menu: [
+        { k: '1', label: 'fix it: aws configure sso, then scan again', run: function () { return '<span class="ps1">$</span> aws configure sso\nSSO start URL: https://corp.awsapps.com/start\nSSO region: eu-west-1\n' + N + '... browser opens, you log in with MFA, credentials now expire every few hours ...</span>\n<span class="ps1">$</span> rm ~/.aws/credentials      ' + N + '# and deactivate the old key in IAM</span>\n<span class="ps1">$</span> loot scan --only aws --all\n' + colorize('o-aws-fixed'); } }
+      ]
+    },
+    {
+      q: 'An SSH key with no passphrase. Why does that matter?',
+      cmd: 'loot scan --only ssh',
+      out: function () { return colorize('o-ssh') + '\n' + N + '// id_ed25519 has no passphrase: the file alone is the key. work_rsa has one: the file alone is useless.\n// same folder, same stealer, completely different outcome.</span>'; },
+      menu: [
+        { k: '1', label: 'fix it: ssh-keygen -p, then scan again', run: function () { return '<span class="ps1">$</span> ssh-keygen -p -f ~/.ssh/id_ed25519\nEnter new passphrase (empty for no passphrase): ********\nEnter same passphrase again: ********\nYour identification has been saved with the new passphrase.\n<span class="ps1">$</span> loot scan --only ssh --all\n' + colorize('o-ssh-fixed') + '\n' + N + '// ssh-agent means you type the passphrase once per login, not once per connection.\n// the next step up is a hardware-backed key: ssh-keygen -t ed25519-sk. then there is no file to steal at all.</span>'; } }
+      ]
+    },
+    {
+      q: 'The .env file in your project.',
+      cmd: 'loot scan --only env-files',
+      out: function () { return colorize('o-env') + '\n' + N + '// loot looks three levels deep under ~/Projects, ~/code, ~/dev, ~/Desktop and friends. .env.example is skipped.\n// node_modules is skipped. a .key file in a certs folder is not.</span>'; },
+      menu: [
+        { k: '1', label: 'why is Stripe critical and SESSION_SECRET only high?', run: function () { return N + '# loot recognises the shape of some tokens. sk_live_ is a Stripe live key: that is money, directly. the rest are\n# flagged because of their names (SECRET, TOKEN, PASSWORD, API_KEY) and because the value is not a placeholder.\n# "changeme" and "your-key-here" are ignored. a value that looks like a path is ignored. KEY_PATH is ignored.</span>'; } },
+        { k: '2', label: 'fix it', run: function () { return '<span class="ps1">$</span> echo ".env" >> .gitignore           ' + N + '# and check it was never committed: git log --all -- .env</span>\n<span class="ps1">$</span> mv .env .envrc                     ' + N + '# direnv loads it per directory, per session</span>\n' + N + '# better: no secrets on disk at all. 1Password CLI, Doppler, or your cloud\'s secret manager inject them at run time.\n# and rotate every one of these keys, because you do not know who has read that file already.</span>'; } }
+      ]
+    },
+    {
+      q: 'Your shell remembers everything you typed.',
+      cmd: 'loot scan --only history',
+      out: function () { return colorize('o-history') + '\n' + N + '// line 5: a token pasted into a curl command. line 3: a secret exported by hand. both are in a plain text file\n// that every stealer grabs right after the browser. the token in the curl line is the same one that was in\n// ~/.git-credentials. one leak, three copies.</span>'; },
+      menu: [
+        { k: '1', label: 'fix it', run: function () { return '<span class="ps1">$</span> history -d 5 && history -d 3       ' + N + '# or just edit ~/.bash_history</span>\n<span class="ps1">$</span> echo \'HISTCONTROL=ignorespace\' >> ~/.bashrc   ' + N + '# zsh: setopt HIST_IGNORE_SPACE</span>\n' + N + '# from now on, start a command with a space and it is never recorded.\n# and rotate the token. deleting the line does not un-leak it.</span>'; } }
+      ]
+    },
+    {
+      q: 'Git, and the tokens you forgot about.',
+      cmd: 'loot scan --only git',
+      out: function () { return colorize('o-git') + '\n' + N + '// credential.helper = store is the setting that writes every Git login to ~/.git-credentials in plain text.\n// gh falls back to a plain text file when no OS keyring is available. both are one copy away from your repos.</span>'; },
+      menu: [
+        { k: '1', label: 'fix it', run: function () { return '<span class="ps1">$</span> git config --global credential.helper manager     ' + N + '# macOS: osxkeychain, Linux: libsecret</span>\n<span class="ps1">$</span> rm ~/.git-credentials\n<span class="ps1">$</span> gh auth logout && gh auth login                      ' + N + '# stores the token in the OS keyring</span>\n' + N + '# then revoke the old tokens on github.com. a copy may already exist.</span>'; } }
+      ]
+    },
+    {
+      q: 'The browser: the number one target.',
+      cmd: 'loot scan --only browsers',
+      out: function () { return colorize('o-browsers') + '\n' + N + '// loot does not open these files, ever. it only notices they exist, because every stealer takes them, and\n// because the advice is the same whatever is inside.</span>'; },
+      menu: [
+        { k: '1', label: 'what do I do about it?', run: function () { return N + '# saved passwords: use a password manager with its own master password instead of the browser\'s store.\n#   on Windows, keep Chrome updated: app-bound encryption makes the stolen file useless on another machine.\n# cookies: a stolen session cookie logs the attacker in without your password and without MFA. log out of\n#   email, cloud consoles and banking instead of staying signed in for months.\n# wallets: a long unique password, and a hardware wallet for anything you would miss.</span>'; } }
+      ]
+    },
+    {
+      q: 'Fix things. Run it again.',
+      cmd: 'loot --all',
+      long: true,
+      out: function () { return colorize('o-fixed') + '\n' + N + '// same laptop, an evening later. F to A. what is left is the browser (keep it updated, use a manager) and two\n// SSH keys that are useless without their passphrases. --all also shows the things you are now doing right.</span>'; },
+      menu: [
+        { k: '1', label: 'what changed', run: function () { return N + '# removed   ~/.aws/credentials        ->  aws configure sso (credentials expire every few hours)\n# changed   ~/.ssh/id_ed25519         ->  ssh-keygen -p (passphrase added)\n# removed   ~/.git-credentials        ->  credential.helper = manager\n# removed   ~/.config/gh/hosts.yml    ->  gh auth login again, token now in the OS keyring\n# removed   ~/.npmrc, ~/.pypirc       ->  tokens revoked; publishing moved to trusted publishing from CI\n# changed   ~/.docker/config.json     ->  credsStore = secretservice\n# changed   ~/.kube/config            ->  exec-based auth (aws eks get-token)\n# removed   ~/.bash_history lines     ->  HISTCONTROL=ignorespace\n# emptied   Projects/shop/.env        ->  direnv + 1Password CLI; every key rotated\n# removed   Projects/infra/certs/vpn-client.key -> OS keychain\n# nothing was deleted by loot. every line above was a human, with the list in hand.</span>'; } }
+      ]
+    }
+  ];
+
+  // ---------- engine ----------
+  var host = document.getElementById('steps'), prog = document.getElementById('prog'), fin = document.getElementById('fin');
+  var cur = -1, state = 'idle', activeEl = null, timers = [];
+  var FAST = /[?&]fast/.test(location.search) || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setProg(n) { var f = Math.round((n / STEPS.length) * 10), s = ''; for (var i = 0; i < 10; i++) s += i < f ? '#' : '-'; prog.textContent = '[' + s + '] Q' + n + '/' + STEPS.length; }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function scrollTo(el) { setTimeout(function () { var y = el.getBoundingClientRect().top + window.pageYOffset - 36; window.scrollTo({ top: y, behavior: 'smooth' }); }, 30); }
+
+  function showStep(i) {
+    if (i >= STEPS.length) { fin.classList.remove('hidden'); state = 'done'; setProg(STEPS.length); scrollTo(fin); return; }
+    cur = i; var s = STEPS[i];
+    var el = document.createElement('section'); el.className = 'step'; el.id = 'q' + (i + 1);
+    el.innerHTML = '<p class="q"><small>QUESTION ' + (i + 1) + ' OF ' + STEPS.length + '</small>' + esc(s.q) + '</p>' +
+      '<div class="prompt" tabindex="0"><span class="ps1">jdoe@laptop:~$</span> <span class="cmd ghost cur">' + esc(s.cmd) + '</span> <span class="hint">[enter] run</span></div>' +
+      '<pre class="out hidden' + (s.long ? ' long' : '') + '"></pre><div class="menu hidden"></div>';
+    host.appendChild(el); activeEl = el; state = 'ready'; setProg(i + 1);
+    var prompt = el.querySelector('.prompt');
+    prompt.addEventListener('click', function () { runStep(); });
+    prompt.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); runStep(); } });
+    if (i > 0) scrollTo(el);
+  }
+  function typeOut(pre, html, done) {
+    var lines = html.split('\n'), i = 0; pre.innerHTML = ''; pre.classList.remove('hidden');
+    if (FAST) { pre.innerHTML = html; done && done(); return; }
+    (function next() {
+      if (i >= lines.length) { done && done(); return; }
+      var step = lines.length > 60 ? 4 : 1;
+      i = Math.min(lines.length, i + step);
+      pre.innerHTML = lines.slice(0, i).join('\n');
+      if (pre.classList.contains('long')) pre.scrollTop = pre.scrollHeight;
+      timers.push(setTimeout(next, 18));
+    })();
+  }
+  function runStep() {
+    if (state !== 'ready' || !activeEl) return;
+    state = 'running';
+    var s = STEPS[cur], cmdEl = activeEl.querySelector('.cmd'), hint = activeEl.querySelector('.hint'), pre = activeEl.querySelector('.out');
+    hint.textContent = '';
+    var text = s.cmd, n = 0; cmdEl.textContent = ''; cmdEl.classList.remove('ghost');
+    if (FAST) { cmdEl.textContent = text; cmdEl.classList.remove('cur'); typeOut(pre, s.out(), function () { afterOutput(s); }); return; }
+    (function type() {
+      if (n <= text.length) { cmdEl.textContent = text.slice(0, n); n++; timers.push(setTimeout(type, 22)); return; }
+      cmdEl.classList.remove('cur');
+      typeOut(pre, s.out(), function () { afterOutput(s); });
+    })();
+  }
+  function afterOutput(s) {
+    var menu = activeEl.querySelector('.menu');
+    var pre = activeEl.querySelector('.out');
+    if (pre.classList.contains('long')) pre.scrollTop = 0;
+    if (s.menu) {
+      menu.classList.remove('hidden');
+      menu.innerHTML = '<span class="lbl">choose:</span>' + s.menu.map(function (m) { return '<button data-k="' + m.k + '"><b>[' + m.k + ']</b> ' + esc(m.label) + '</button>'; }).join('');
+      menu.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { choose(b.getAttribute('data-k')); }); });
+    }
+    var next = document.createElement('a'); next.className = 'next'; next.href = '#';
+    next.innerHTML = '<span class="arrow">▼</span>' + (cur + 1 < STEPS.length ? 'next: question ' + (cur + 2) + ' of ' + STEPS.length + '   [↓]' : 'the end   [↓]');
+    next.addEventListener('click', function (e) { e.preventDefault(); advance(); });
+    activeEl.appendChild(next); state = 'open';
+  }
+  function choose(k) {
+    if (state !== 'open' || !activeEl) return;
+    var s = STEPS[cur], m = (s.menu || []).filter(function (x) { return x.k === k; })[0];
+    if (!m) return;
+    activeEl.querySelectorAll('.menu button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-k') === k); });
+    var extra = activeEl.querySelector('.extra');
+    if (!extra) { extra = document.createElement('pre'); extra.className = 'out extra'; activeEl.querySelector('.menu').insertAdjacentElement('afterend', extra); }
+    extra.innerHTML = ''; state = 'running'; clearTimers();
+    typeOut(extra, m.run(), function () { state = 'open'; });
+  }
+  function advance() { if (state !== 'open') return; activeEl.querySelector('.next').classList.add('hidden'); showStep(cur + 1); }
+  function restart() { clearTimers(); host.innerHTML = ''; fin.classList.add('hidden'); cur = -1; state = 'idle'; window.scrollTo(0, 0); showStep(0); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === 'Enter') { e.preventDefault(); if (state === 'ready') runStep(); else if (state === 'open') advance(); }
+    else if (e.key === 'ArrowDown' && state === 'open') { e.preventDefault(); advance(); }
+    else if (/^[1-9]$/.test(e.key)) { choose(e.key); }
+    else if (e.key === 'r' || e.key === 'R') { restart(); }
+  });
+  document.getElementById('restart').addEventListener('click', function (e) { e.preventDefault(); restart(); });
+  showStep(0);
+})();
+</script>
+</body>
+</html>
