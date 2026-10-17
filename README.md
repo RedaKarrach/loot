@@ -2,7 +2,7 @@
 
 What would an infostealer take from your laptop?
 
-![loot: what would an infostealer take from your laptop?](docs/assets/banner.svg)
+![loot in a terminal: F before, A after an evening of fixes](docs/assets/demo.gif)
 
 Try it, step by step, with real output: **https://redakarrach.github.io/loot/**
 
