@@ -23,6 +23,20 @@ It only reads. Nothing leaves your machine. Secrets are never printed in full.
 
 Python 3.11 or newer.
 
+With [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv tool install git+https://github.com/RedaKarrach/loot
+```
+
+Or run it once without installing anything:
+
+```bash
+uvx --from git+https://github.com/RedaKarrach/loot loot
+```
+
+With pipx:
+
 ```bash
 pipx install git+https://github.com/RedaKarrach/loot
 ```
@@ -149,12 +163,14 @@ check in a dotfiles repository or a laptop onboarding script.
 ## Development
 
 ```bash
-pip install -e ".[dev]"
+uv sync --extra dev
 ```
 
 ```bash
-python -m pytest
+uv run pytest
 ```
+
+`uv.lock` pins every dependency; CI installs from it with `uv sync --locked`.
 
 The tests plant a fake home folder with every kind of credential loot knows about and
 check that each one is found, graded, and never printed. CI runs the suite on Linux,
