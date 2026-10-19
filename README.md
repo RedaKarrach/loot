@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/assets/logo.svg" width="128" alt="loot logo: a stealer's sack with a stolen key"></p>
+<p align="center"><img src="docs/assets/logo-wordmark.svg" width="860" alt="loot: what an infostealer would take from your laptop"></p>
 
 # loot
 
