@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="loot logo: a stealer's sack with a stolen key sticking out">
+  <defs>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="#0b0b0d"/>
+
+  <!-- the sack -->
+  <path d="M78 122 C58 146 56 184 74 206 C92 228 164 228 182 206 C200 184 198 146 178 122 Z" fill="#1a1013" stroke="#ff4d6d" stroke-width="8" stroke-linejoin="round" filter="url(#glow)"/>
+  <!-- gathered neck -->
+  <path d="M100 122 C96 108 104 98 116 94 H140 C152 98 160 108 156 122" fill="#1a1013" stroke="#ff4d6d" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- tie -->
+  <path d="M94 123 H162" stroke="#ff4d6d" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- the key, half out of the bag -->
+  <g stroke="#ff4d6d" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+    <circle cx="170" cy="52" r="17" fill="#0b0b0d" stroke-width="8"/>
+    <path d="M158 64 L122 100" stroke-width="10" fill="none"/>
+    <path d="M136 86 L146 96 M128 94 L136 102" stroke-width="8" fill="none"/>
+  </g>
+
+  <!-- a token peeking out too -->
+  <path d="M104 100 L84 86 L96 74 L116 88" fill="#1a1013" stroke="#ff4d6d" stroke-width="6" stroke-linejoin="round"/>
+</svg>

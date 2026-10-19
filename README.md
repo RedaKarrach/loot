@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.svg" width="128" alt="loot logo: a stealer's sack with a stolen key"></p>
+
 # loot
 
 What would an infostealer take from your laptop?
